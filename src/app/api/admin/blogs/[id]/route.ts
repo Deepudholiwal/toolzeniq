@@ -47,11 +47,13 @@ function writeBlogs(blogs: Blog[]): void {
 // GET /api/admin/blogs/[id] - Get a specific blog
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
+
     const blogs = readBlogs();
-    const blog = blogs.find(b => b.id === params.id);
+    const blog = blogs.find(b => b.id === id);
 
     if (!blog) {
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
@@ -67,9 +69,11 @@ export async function GET(
 // PUT /api/admin/blogs/[id] - Update a blog
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
+
     const body = await request.json();
     const { title, slug, excerpt, content, author, published } = body;
 
