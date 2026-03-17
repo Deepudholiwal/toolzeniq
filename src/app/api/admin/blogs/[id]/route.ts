@@ -85,14 +85,14 @@ export async function PUT(
     }
 
     const blogs = readBlogs();
-    const blogIndex = blogs.findIndex(b => b.id === params.id);
+    const blogIndex = blogs.findIndex(b => b.id === id);
 
     if (blogIndex === -1) {
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
     }
 
     // Check if slug already exists (excluding current blog)
-    if (blogs.some(blog => blog.slug === slug && blog.id !== params.id)) {
+    if (blogs.some(blog => blog.slug === slug && blog.id !== id)) {
       return NextResponse.json(
         { error: 'Blog with this slug already exists' },
         { status: 400 }
@@ -123,12 +123,13 @@ export async function PUT(
 // PATCH /api/admin/blogs/[id] - Partially update a blog (for publish/unpublish)
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body = await request.json();
     const blogs = readBlogs();
-    const blogIndex = blogs.findIndex(b => b.id === params.id);
+    const blogIndex = blogs.findIndex(b => b.id === id);
 
     if (blogIndex === -1) {
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
@@ -153,11 +154,12 @@ export async function PATCH(
 // DELETE /api/admin/blogs/[id] - Delete a blog
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const blogs = readBlogs();
-    const blogIndex = blogs.findIndex(b => b.id === params.id);
+    const blogIndex = blogs.findIndex(b => b.id === id);
 
     if (blogIndex === -1) {
       return NextResponse.json({ error: 'Blog not found' }, { status: 404 });
@@ -172,3 +174,4 @@ export async function DELETE(
     return NextResponse.json({ error: 'Failed to delete blog' }, { status: 500 });
   }
 }
+

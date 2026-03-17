@@ -43,11 +43,12 @@ function writeSubscriptions(subscriptions: Subscription[]): void {
 // GET /api/admin/subscriptions/[id] - Get a specific subscription
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const subscriptions = readSubscriptions();
-    const subscription = subscriptions.find(s => s.id === params.id);
+    const subscription = subscriptions.find(s => s.id === id);
 
     if (!subscription) {
       return NextResponse.json({ error: 'Subscription not found' }, { status: 404 });
@@ -63,12 +64,13 @@ export async function GET(
 // PATCH /api/admin/subscriptions/[id] - Update subscription (activate/deactivate)
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body = await request.json();
     const subscriptions = readSubscriptions();
-    const subscriptionIndex = subscriptions.findIndex(s => s.id === params.id);
+    const subscriptionIndex = subscriptions.findIndex(s => s.id === id);
 
     if (subscriptionIndex === -1) {
       return NextResponse.json({ error: 'Subscription not found' }, { status: 404 });
@@ -92,11 +94,12 @@ export async function PATCH(
 // DELETE /api/admin/subscriptions/[id] - Delete subscription
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const subscriptions = readSubscriptions();
-    const subscriptionIndex = subscriptions.findIndex(s => s.id === params.id);
+    const subscriptionIndex = subscriptions.findIndex(s => s.id === id);
 
     if (subscriptionIndex === -1) {
       return NextResponse.json({ error: 'Subscription not found' }, { status: 404 });

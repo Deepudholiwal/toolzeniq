@@ -46,11 +46,12 @@ function writeFeedback(feedback: Feedback[]): void {
 // GET /api/admin/feedback/[id] - Get a specific feedback
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const feedback = readFeedback();
-    const item = feedback.find(f => f.id === params.id);
+    const item = feedback.find(f => f.id === id);
 
     if (!item) {
       return NextResponse.json({ error: 'Feedback not found' }, { status: 404 });
@@ -66,12 +67,13 @@ export async function GET(
 // PATCH /api/admin/feedback/[id] - Update feedback (mark as read/unread)
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body = await request.json();
     const feedback = readFeedback();
-    const feedbackIndex = feedback.findIndex(f => f.id === params.id);
+    const feedbackIndex = feedback.findIndex(f => f.id === id);
 
     if (feedbackIndex === -1) {
       return NextResponse.json({ error: 'Feedback not found' }, { status: 404 });
@@ -95,11 +97,12 @@ export async function PATCH(
 // DELETE /api/admin/feedback/[id] - Delete feedback
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const feedback = readFeedback();
-    const feedbackIndex = feedback.findIndex(f => f.id === params.id);
+    const feedbackIndex = feedback.findIndex(f => f.id === id);
 
     if (feedbackIndex === -1) {
       return NextResponse.json({ error: 'Feedback not found' }, { status: 404 });
