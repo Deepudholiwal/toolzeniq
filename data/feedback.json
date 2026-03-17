@@ -1,0 +1,31 @@
+[
+  {
+    "id": "1",
+    "name": "John Doe",
+    "email": "john@example.com",
+    "message": "Great tools! The image compressor is really fast and maintains good quality. Keep up the good work!",
+    "rating": 5,
+    "tool": "Image Compressor",
+    "createdAt": "2024-01-15T10:30:00.000Z",
+    "read": false
+  },
+  {
+    "id": "2",
+    "name": "Jane Smith",
+    "email": "jane@example.com",
+    "message": "The JSON formatter is very helpful for cleaning up my data. Could you add more validation features?",
+    "rating": 4,
+    "tool": "JSON Formatter",
+    "createdAt": "2024-01-14T14:20:00.000Z",
+    "read": true
+  },
+  {
+    "id": "3",
+    "name": "Mike Johnson",
+    "email": "mike@example.com",
+    "message": "Love the interface! Very clean and easy to use. Looking forward to more tools.",
+    "rating": 5,
+    "createdAt": "2024-01-13T09:15:00.000Z",
+    "read": true
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "1",
+    "email": "john@example.com",
+    "subscribedAt": "2024-01-10T08:00:00.000Z",
+    "source": "Website",
+    "active": true
+  },
+  {
+    "id": "2",
+    "email": "jane@example.com",
+    "subscribedAt": "2024-01-12T14:30:00.000Z",
+    "source": "Newsletter",
+    "active": true
+  },
+  {
+    "id": "3",
+    "email": "mike@example.com",
+    "subscribedAt": "2024-01-08T10:15:00.000Z",
+    "source": "Website",
+    "active": false
+  },
+  {
+    "id": "4",
+    "email": "sarah@example.com",
+    "subscribedAt": "2024-01-14T16:45:00.000Z",
+    "source": "Footer",
+    "active": true
+  }
+]
