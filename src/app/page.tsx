@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { Search, Sparkles, Users, Wrench, Zap, Star, ArrowRight } from 'lucide-react';
+import { Search, Sparkles, Users, Wrench, Zap, Star, ArrowRight, TrendingUp, Clock, Award, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { TOOLS } from '@/lib/tools';
+import { TOOLS, CATEGORIES } from '@/lib/tools';
 
 const featuredTools = [
   {
@@ -51,6 +51,33 @@ const featuredTools = [
   },
 ];
 
+const trendingTools = [
+  'image-compressor',
+  'qr-code-generator',
+  'password-generator',
+  'json-formatter',
+  'word-counter',
+  'case-converter',
+];
+
+const popularTools = [
+  'image-compressor',
+  'json-formatter',
+  'qr-code-generator',
+  'password-generator',
+  'word-counter',
+  'random-text-generator',
+];
+
+const newTools = [
+  'image-metadata',
+  'watermark-image',
+  'base64-to-image',
+  'image-to-base64',
+  'color-picker',
+  'url-encoder',
+];
+
 const stats = [
   { label: 'Total Tools', value: '50+', icon: Wrench, color: 'text-blue-600' },
   { label: 'Happy Users', value: '100K+', icon: Users, color: 'text-green-600' },
@@ -72,7 +99,7 @@ export default function Home() {
       tool.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       tool.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
       tool.keywords.some(keyword => keyword.toLowerCase().includes(searchTerm.toLowerCase()))
-    ).slice(0, 6); // Limit to 6 results for dropdown
+    ).slice(0, 6);
   }, [searchTerm]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -88,7 +115,6 @@ export default function Home() {
 
     setIsSubscribing(true);
     try {
-      // Simulate API call - replace with actual newsletter subscription
       await new Promise(resolve => setTimeout(resolve, 1000));
       setIsSubscribed(true);
       setEmail('');
@@ -98,6 +124,32 @@ export default function Home() {
       setIsSubscribing(false);
     }
   };
+
+  const getToolBySlug = (slug: string) => TOOLS.find(tool => tool.slug === slug);
+
+  const renderToolCard = (tool: any, index: number) => (
+    <Link
+      key={tool.slug}
+      href={`/tools/${tool.slug}`}
+      className="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/50 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10"
+      style={{ animationDelay: `${index * 100}ms` }}
+    >
+      <div className="flex items-center gap-4 mb-4">
+        <span className="text-3xl group-hover:scale-110 transition-transform duration-300">{tool.icon}</span>
+        <div>
+          <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+            {tool.title}
+          </h3>
+          <p className="text-sm text-gray-500 dark:text-gray-400">{tool.category}</p>
+        </div>
+      </div>
+      <p className="text-gray-600 dark:text-gray-300 mb-4">{tool.description}</p>
+      <div className="flex items-center text-blue-600 dark:text-blue-400 font-medium group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors">
+        Try it now
+        <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+      </div>
+    </Link>
+  );
 
   return (
     <div className="min-h-screen">
@@ -151,29 +203,7 @@ export default function Home() {
 
           {/* Featured Tools Grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
-            {featuredTools.map((tool, index) => (
-              <Link
-                key={tool.slug}
-                href={`/tools/${tool.slug}`}
-                className="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/50 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 animate-fade-in"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                <div className="flex items-center gap-4 mb-4">
-                  <span className="text-3xl group-hover:scale-110 transition-transform duration-300">{tool.icon}</span>
-                  <div>
-                    <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                      {tool.title}
-                    </h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{tool.category}</p>
-                  </div>
-                </div>
-                <p className="text-gray-600 dark:text-gray-300 mb-4">{tool.description}</p>
-                <div className="flex items-center text-blue-600 dark:text-blue-400 font-medium group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors">
-                  Try it now
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                </div>
-              </Link>
-            ))}
+            {featuredTools.map((tool, index) => renderToolCard(tool, index))}
           </div>
 
           {/* Stats Section */}
@@ -187,6 +217,85 @@ export default function Home() {
                 <div className="text-gray-600 dark:text-gray-400 font-medium">{stat.label}</div>
               </div>
             ))}
+          </div>
+
+          {/* Tool Categories Section */}
+          <div className="mb-20">
+            <div className="text-center mb-12">
+              <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Explore Tool Categories</h2>
+              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                Find the perfect tool for your needs across our comprehensive categories
+              </p>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {CATEGORIES.slice(0, 6).map((category, index) => (
+                <Link
+                  key={category.slug}
+                  href={`/categories/${category.slug}`}
+                  className="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/50 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 hover:shadow-xl"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="p-3 bg-blue-100 dark:bg-blue-900/50 rounded-xl group-hover:bg-blue-200 dark:group-hover:bg-blue-800/50 transition-colors">
+                      <Wrench className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                        {category.name}
+                      </h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400">{category.tools.length} tools</p>
+                    </div>
+                  </div>
+                  <p className="text-gray-600 dark:text-gray-300 mb-4">{category.description}</p>
+                  <div className="flex items-center text-blue-600 dark:text-blue-400 font-medium group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors">
+                    Explore category
+                    <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Trending Tools Section */}
+          <div className="mb-20">
+            <div className="flex items-center gap-3 mb-8">
+              <TrendingUp className="w-8 h-8 text-orange-500" />
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Trending Tools</h2>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {trendingTools.slice(0, 6).map((slug, index) => {
+                const tool = getToolBySlug(slug);
+                return tool ? renderToolCard(tool, index) : null;
+              })}
+            </div>
+          </div>
+
+          {/* Popular Tools Section */}
+          <div className="mb-20">
+            <div className="flex items-center gap-3 mb-8">
+              <Award className="w-8 h-8 text-yellow-500" />
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Most Popular</h2>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {popularTools.slice(0, 6).map((slug, index) => {
+                const tool = getToolBySlug(slug);
+                return tool ? renderToolCard(tool, index) : null;
+              })}
+            </div>
+          </div>
+
+          {/* New Tools Section */}
+          <div className="mb-20">
+            <div className="flex items-center gap-3 mb-8">
+              <Clock className="w-8 h-8 text-green-500" />
+              <h2 className="text-3xl font-bold text-gray-900 dark:text-white">New Tools</h2>
+            </div>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {newTools.slice(0, 6).map((slug, index) => {
+                const tool = getToolBySlug(slug);
+                return tool ? renderToolCard(tool, index) : null;
+              })}
+            </div>
           </div>
 
           {/* Newsletter Section */}

@@ -111,12 +111,13 @@ export default function ToolRenderer({ slug }: ToolRendererProps) {
 
   return (
     <div className="container py-12">
-      <AdPlaceholder label="Header Ad" className="mb-10" />
+      <AdPlaceholder position="top" className="mb-10" />
       {isImageTool ? <ImageTool slug={slug} /> : ToolComponent ? <ToolComponent /> : <GenericTool slug={slug} />}
       <div className="mt-12 grid gap-8 lg:grid-cols-2">
-        <AdPlaceholder label="Sidebar Ad" />
-        <AdPlaceholder label="Below Tool Ad" />
+        <AdPlaceholder position="sidebar" />
+        <AdPlaceholder position="bottom" />
       </div>
+
     </div>
   );
 }

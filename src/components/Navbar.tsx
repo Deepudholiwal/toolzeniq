@@ -2,8 +2,8 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Menu, Moon, Sun, X, ChevronDown, Sparkles, Wrench, Palette, Calculator, Code, FileText, Zap } from 'lucide-react';
+import { usePathname, useRouter } from 'next/navigation';
+import { Menu, Moon, Sun, X, ChevronDown, Sparkles, Wrench, Palette, Calculator, Code, FileText, Zap, Search, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { CATEGORIES, TOOLS } from '@/lib/tools';
 
@@ -18,17 +18,35 @@ interface NavItem {
     tools?: number;
   }[];
   icon?: React.ComponentType<{ className?: string }>;
+  primary?: boolean;
+}
+
+function getCategoryIcon(slug: string) {
+  const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+    'image-tools': Palette,
+    'text-tools': FileText,
+    'developer-tools': Code,
+    'calculators': Calculator,
+    'generators': Zap,
+    'converters': Wrench,
+    'design-tools': Palette,
+  };
+
+  return iconMap[slug] || Wrench;
 }
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const [activeMobile, setActiveMobile] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   // Group categories by type for better organization
-  const navItems: NavItem[] = useMemo(() => {
+  const navItems = useMemo(() => {
     const toolCategories = CATEGORIES.map((category) => ({
       href: `/categories/${category.slug}`,
       label: category.name,
@@ -38,14 +56,20 @@ export default function Navbar() {
     }));
 
     return [
-      { href: '/', label: 'Home' },
       {
         href: '/tools',
-        label: 'Tools',
+        label: 'All Tools',
         icon: Wrench,
+        primary: true
+      },
+      {
+        href: '/categories',
+        label: 'Categories',
+        icon: Sparkles,
         items: toolCategories,
       },
       { href: '/blog', label: 'Blog' },
+      { href: '/about', label: 'About' },
     ];
   }, []);
 
@@ -81,6 +105,24 @@ export default function Navbar() {
     setActiveMobile((prev) => (prev === label ? null : label));
   };
 
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/tools?search=${encodeURIComponent(searchQuery)}`);
+      setIsSearchOpen(false);
+      setSearchQuery('');
+    }
+  };
+
+  const filteredTools = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    return TOOLS.filter(tool =>
+      tool.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      tool.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      tool.keywords.some(keyword => keyword.toLowerCase().includes(searchQuery.toLowerCase()))
+    ).slice(0, 8);
+  }, [searchQuery]);
+
   const renderDesktopNavItem = (item: NavItem) => {
     const isActive =
       pathname === item.href ||
@@ -88,11 +130,13 @@ export default function Navbar() {
 
     const IconComponent = item.icon;
 
-    const linkClassName = `relative inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 ${
-      isActive
-        ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 shadow-sm'
-        : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800/50'
-    }`;
+    const linkClassName = item.primary
+      ? `relative inline-flex items-center gap-2 px-6 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 bg-blue-600 text-white hover:bg-blue-700 shadow-lg hover:shadow-xl hover:shadow-blue-500/25`
+      : `relative inline-flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-200 ${
+          isActive
+            ? 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 shadow-sm'
+            : 'text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-gray-800/50'
+        }`;
 
     const renderMegaMenu = () =>
       item.items ? (
@@ -162,7 +206,7 @@ export default function Navbar() {
                   className="inline-flex items-center gap-2 text-sm font-medium text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition-colors"
                 >
                   <span>View all tools</span>
-                  <ChevronDown className="w-3.5 h-3.5 rotate-[-90deg]" />
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
             </div>
@@ -263,8 +307,51 @@ export default function Navbar() {
             <span>Toolzeniq</span>
           </Link>
 
+          {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-2">
             {navItems.map(renderDesktopNavItem)}
+
+            {/* Search Bar */}
+            <div className="relative ml-4">
+              <form onSubmit={handleSearch} className="relative">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 w-4 h-4 -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search tools..."
+                    className="w-64 pl-10 pr-4 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onFocus={() => setIsSearchOpen(true)}
+                    onBlur={() => setTimeout(() => setIsSearchOpen(false), 200)}
+                  />
+                </div>
+
+                {/* Search Results Dropdown */}
+                {searchQuery && isSearchOpen && filteredTools.length > 0 && (
+                  <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 max-h-80 overflow-y-auto z-50">
+                    {filteredTools.map((tool) => (
+                      <Link
+                        key={tool.slug}
+                        href={`/tools/${tool.slug}`}
+                        className="flex items-center gap-3 p-3 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors border-b border-gray-100 dark:border-gray-600 last:border-b-0"
+                        onClick={() => {
+                          setIsSearchOpen(false);
+                          setSearchQuery('');
+                        }}
+                      >
+                        <span className="text-xl">{tool.icon}</span>
+                        <div className="flex-1 min-w-0">
+                          <div className="font-medium text-gray-900 dark:text-white text-sm">{tool.title}</div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400 truncate">{tool.description}</div>
+                        </div>
+                        <ArrowRight className="w-3 h-3 text-gray-400" />
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </form>
+            </div>
 
             <div className="ml-4 pl-4 border-l border-gray-200 dark:border-gray-700">
               <Button
@@ -287,9 +374,26 @@ export default function Navbar() {
           </button>
         </div>
 
+        {/* Mobile Navigation */}
         {isOpen && (
           <div className="md:hidden border-t border-gray-200/60 dark:border-gray-800/60 bg-white/95 dark:bg-gray-900/95 backdrop-blur-xl">
             <div className="py-4 space-y-1">
+              {/* Mobile Search */}
+              <div className="px-4 pb-4 border-b border-gray-200/60 dark:border-gray-800/60">
+                <form onSubmit={handleSearch}>
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 w-4 h-4 -translate-y-1/2 text-gray-400" />
+                    <input
+                      type="text"
+                      placeholder="Search tools..."
+                      className="w-full pl-10 pr-4 py-3 text-sm border border-gray-200 dark:border-gray-700 rounded-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  </div>
+                </form>
+              </div>
+
               {navItems.map(renderMobileNavItem)}
 
               <div className="pt-4 border-t border-gray-200/60 dark:border-gray-800/60">
@@ -307,20 +411,5 @@ export default function Navbar() {
       </div>
     </nav>
   );
-}
-
-// Helper function to get category icons
-function getCategoryIcon(slug: string) {
-  const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
-    'image-tools': Palette,
-    'text-tools': FileText,
-    'developer-tools': Code,
-    'calculators': Calculator,
-    'generators': Zap,
-    'converters': Wrench,
-    'design-tools': Palette,
-  };
-
-  return iconMap[slug] || Wrench;
 }
 
