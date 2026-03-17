@@ -10,7 +10,13 @@ import { CATEGORIES, TOOLS } from '@/lib/tools';
 interface NavItem {
   href: string;
   label: string;
-  items?: { href: string; label: string; icon?: string; description?: string; tools?: number }[];
+  items?: {
+    href: string;
+    label: string;
+    icon?: React.ComponentType<{ className?: string }>;
+    description?: string;
+    tools?: number;
+  }[];
   icon?: React.ComponentType<{ className?: string }>;
 }
 

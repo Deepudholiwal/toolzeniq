@@ -71,12 +71,7 @@ function MarkdownContent({ content }: { content: string }) {
 
   return (
     <div className="space-y-4">
-      {elements.map((el, idx) => {
-        if (typeof el === 'object' && el?.key?.toString().startsWith('empty-')) {
-          return el;
-        }
-        return el;
-      })}
+      {elements}
     </div>
   );
 }
