@@ -1,4 +1,64 @@
+# Robots.txt for Toolzeniq - Free Online Tools
+# Website: https://toolzeniq.com
+
+# Allow all web crawlers to access the site
 User-agent: *
 Allow: /
 
+# Disallow admin and API routes
+Disallow: /admin/
+Disallow: /api/
+
+# Disallow private or sensitive paths
+Disallow: /_next/
+Disallow: /node_modules/
+Disallow: /.git/
+
+# Allow access to CSS, JS, and image files
+Allow: /_next/static/
+Allow: /*.css$
+Allow: /*.js$
+Allow: /*.png$
+Allow: /*.jpg$
+Allow: /*.jpeg$
+Allow: /*.gif$
+Allow: /*.svg$
+Allow: /*.ico$
+Allow: /*.webp$
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1
+
+# Sitemap location
 Sitemap: https://toolzeniq.com/sitemap.xml
+
+# Specific rules for major search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+User-agent: DuckDuckBot
+Allow: /
+Crawl-delay: 1
+
+# Block unwanted bots
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+

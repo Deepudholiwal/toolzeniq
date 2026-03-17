@@ -147,135 +147,77 @@ export default function Home() {
                 )}
               </div>
             </form>
-            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto animate-fade-in stagger-4">
-              <Button size="lg" className="px-8 flex-shrink-0 hover-lift" asChild>
-                <Link href="/tools" className="flex items-center justify-center">
-                  <Sparkles className="w-5 h-5 mr-2" />
-                  Get Started
-                </Link>
-              </Button>
-            </div>
           </div>
-        </div>
 
-        {/* Floating elements */}
-        <div className="absolute top-20 left-10 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl animate-pulse float" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse delay-300 float" />
-        <div className="absolute top-1/2 left-1/4 w-32 h-32 bg-pink-500/10 rounded-full blur-2xl animate-pulse delay-700 float" />
+          {/* Featured Tools Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
+            {featuredTools.map((tool, index) => (
+              <Link
+                key={tool.slug}
+                href={`/tools/${tool.slug}`}
+                className="group bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-2xl p-6 border border-gray-200/50 dark:border-gray-700/50 hover:border-blue-300 dark:hover:border-blue-600 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 animate-fade-in"
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <div className="flex items-center gap-4 mb-4">
+                  <span className="text-3xl group-hover:scale-110 transition-transform duration-300">{tool.icon}</span>
+                  <div>
+                    <h3 className="font-bold text-lg text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                      {tool.title}
+                    </h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">{tool.category}</p>
+                  </div>
+                </div>
+                <p className="text-gray-600 dark:text-gray-300 mb-4">{tool.description}</p>
+                <div className="flex items-center text-blue-600 dark:text-blue-400 font-medium group-hover:text-blue-700 dark:group-hover:text-blue-300 transition-colors">
+                  Try it now
+                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </Link>
+            ))}
+          </div>
 
-        {/* Particles */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="particle absolute top-1/4 left-1/4 stagger-1" />
-          <div className="particle absolute top-1/3 right-1/3 stagger-2" />
-          <div className="particle absolute bottom-1/3 left-1/3 stagger-3" />
-          <div className="particle absolute bottom-1/4 right-1/4 stagger-4" />
-        </div>
-      </section>
-
-      {/* Stats Section */}
-      <section className="py-16 bg-white dark:bg-gray-900">
-        <div className="container">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          {/* Stats Section */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-20">
             {stats.map((stat, index) => (
-              <div key={stat.label} className={`text-center animate-fade-in stagger-${index + 1}`}>
-                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gray-100 dark:bg-gray-800 mb-4 hover-scale ${stat.color}`}>
+              <div key={stat.label} className="text-center animate-fade-in" style={{ animationDelay: `${index * 150}ms` }}>
+                <div className={`inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm mb-4 ${stat.color}`}>
                   <stat.icon className="w-8 h-8" />
                 </div>
                 <div className="text-3xl font-bold text-gray-900 dark:text-white mb-2">{stat.value}</div>
-                <div className="text-gray-600 dark:text-gray-400">{stat.label}</div>
+                <div className="text-gray-600 dark:text-gray-400 font-medium">{stat.label}</div>
               </div>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* Featured Tools */}
-      <section className="container py-24">
-        <div className="text-center mb-20">
-          <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent mb-4 animate-fade-in">
-            Popular Tools
-          </h2>
-          <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto animate-fade-in stagger-1">
-            Start with our most popular tools used by thousands daily
-          </p>
-        </div>
-
-        <div className="tool-grid">
-          {featuredTools.map((tool, index) => (
-            <Link key={tool.slug} href={`/tools/${tool.slug}`} className={`card group hover-lift animate-fade-in stagger-${index + 1}`}>
-              <div className="flex items-start gap-4 mb-6">
-                <div className="p-3 bg-blue-100 dark:bg-blue-900/50 rounded-xl group-hover:scale-110 transition-transform duration-300">
-                  <span className="text-2xl">{tool.icon}</span>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors mb-2">
-                    {tool.title}
-                  </h3>
-                  <p className="text-gray-600 dark:text-gray-400 leading-relaxed">
-                    {tool.description}
-                  </p>
-                </div>
-              </div>
-              <Button className="w-full group-hover:shadow-xl transform hover:-translate-y-1 transition-all duration-300 hover-glow">
-                Use Tool
-              </Button>
-            </Link>
-          ))}
-        </div>
-
-        <div className="text-center mt-16 animate-fade-in stagger-6">
-          <Button size="lg" variant="outline" className="hover-lift" asChild>
-            <Link href="/tools" className="flex items-center">
-              View All Tools
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
-          </Button>
-        </div>
-      </section>
-
-      {/* Newsletter */}
-      <section className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-black/10" />
-        <div className="container relative z-10 text-center">
-          <div className="max-w-2xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 animate-fade-in">
+          {/* Newsletter Section */}
+          <div className="max-w-2xl mx-auto text-center bg-white/40 dark:bg-gray-800/40 backdrop-blur-sm rounded-3xl p-8 border border-gray-200/50 dark:border-gray-700/50">
+            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
               Stay Updated
             </h2>
-            <p className="text-xl mb-12 opacity-90 animate-fade-in stagger-1 max-w-xl mx-auto">
-              Get notified when we add new tools and features to make your workflow even better
+            <p className="text-gray-600 dark:text-gray-300 mb-8">
+              Get notified when we add new tools and features to Toolzeniq.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto animate-fade-in stagger-2">
+            <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
               <input
                 type="email"
                 placeholder="Enter your email"
-                className="flex-1 px-6 py-4 rounded-xl text-gray-900 focus:ring-4 focus:ring-white/30 focus:outline-none transition-all"
+                className="flex-1 px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-xl bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isSubscribed}
               />
               <Button
-                size="lg"
-                className="bg-white text-gray-900 hover:bg-gray-100 px-8 hover-lift"
-                onClick={handleNewsletterSubmit}
-                disabled={isSubscribing || isSubscribed || !email.trim()}
+                type="submit"
+                disabled={isSubscribed || isSubscribing}
+                className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-medium transition-all disabled:opacity-50"
               >
                 {isSubscribed ? 'Subscribed!' : isSubscribing ? 'Subscribing...' : 'Subscribe'}
               </Button>
-            </div>
-            {isSubscribed && (
-              <p className="text-sm opacity-75 mt-4 animate-fade-in">
-                ✅ Thanks for subscribing! We'll keep you updated with new tools and features.
-              </p>
-            )}
-            {!isSubscribed && (
-              <p className="text-sm opacity-75 mt-4 animate-fade-in stagger-3">
-                No spam, unsubscribe at any time.
-              </p>
-            )}
+            </form>
           </div>
         </div>
 
-        {/* Background decoration */}
+        {/* Background Elements */}
         <div className="absolute top-0 left-0 w-full h-full">
           <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl animate-pulse" />
           <div className="absolute bottom-10 right-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse delay-300" />
