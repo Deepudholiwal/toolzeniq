@@ -53,7 +53,14 @@ export default function ToolsPage() {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredTools.map((tool) => (
-            <ToolCard key={tool.slug} tool={tool} />
+            <ToolCard
+              key={tool.slug}
+              slug={tool.slug}
+              title={tool.title}
+              description={tool.description}
+              icon={tool.icon}
+              category={tool.category}
+            />
           ))}
         </div>
 
