@@ -22,13 +22,37 @@ export default function JsonFormatter() {
       setError('');
     } catch (err) {
       console.error(err);
-      setError('Invalid JSON');
+      setError(err instanceof Error ? err.message : 'Invalid JSON');
       setOutput('');
     }
   };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(output);
+  };
+
+  const loadSampleJson = () => {
+    const sample = {
+      "name": "John Doe",
+      "age": 30,
+      "email": "john.doe@example.com",
+      "address": {
+        "street": "123 Main St",
+        "city": "Anytown",
+        "zipCode": "12345"
+      },
+      "hobbies": ["reading", "coding", "gaming"],
+      "isActive": true
+    };
+    setInput(JSON.stringify(sample, null, 2));
+    setOutput('');
+    setError('');
+  };
+
+  const clearAll = () => {
+    setInput('');
+    setOutput('');
+    setError('');
   };
 
   const downloadJson = () => {
@@ -94,9 +118,17 @@ export default function JsonFormatter() {
                 Minify
               </button>
             </div>
-            <Button onClick={processJson} className="ml-auto">
-              Process JSON
-            </Button>
+            <div className="flex gap-2 ml-auto">
+              <Button onClick={loadSampleJson} variant="outline">
+                Load Sample
+              </Button>
+              <Button onClick={clearAll} variant="outline">
+                Clear
+              </Button>
+              <Button onClick={processJson}>
+                Process JSON
+              </Button>
+            </div>
           </div>
         </div>
 
