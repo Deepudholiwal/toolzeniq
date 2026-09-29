@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Inter } from "next/font/google";
 import { ReactNode } from "react";
 import { Analytics } from "@vercel/analytics/next";
@@ -215,6 +216,10 @@ export default function RootLayout({
         <main className="pt-16">{children}</main>
         <Footer />
         <Analytics />
+        <Script
+          src="https://brochat-gxkm.onrender.com/widget.js"
+          data-bot-id="20e90603-8e31-4f49-bb95-52675d55333c"
+        />
       </body>
     </html>
   );
