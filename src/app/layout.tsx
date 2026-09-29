@@ -217,8 +217,8 @@ export default function RootLayout({
         <Footer />
         <Analytics />
         <Script
-          src="http://localhost:8000/widget.js"
-          data-bot-id="0e5956e9-eb00-478b-92d0-cfc358b60230"
+          src="https://brochat-gxkm.onrender.com/widget.js"
+          data-bot-id="6c161afe-ac0c-4ec4-81db-88f6223b45fd"
         />
       </body>
     </html>
